@@ -37,11 +37,6 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 
 ## Initial data exploration
 
-
-## Data cleaning and preprocessing
-
-=> Add stuff here <=
-
 ```{r test, echo=FALSE}
 accident.times = data.frame(Longitude=dat$Longitude, Latitude=dat$Latitude, hour=strptime(as.character(dat$Crash.Date.Time), "%m/%d/%Y %I:%M:%S %p", tz = "America/New_York")$hour + 1, dat$Collision.Type)
 #1: ratio of colision types per hour
@@ -55,6 +50,12 @@ cols = c("ANGLE MEETS LEFT HEAD ON","ANGLE MEETS LEFT TURN", "ANGLE MEETS RIGHT 
 plot(hr.table[,cols], las=1, col=rainbow(16), main = "Ratios of Collisions per Hour of the Day")
 legend('topleft',legend = cols,col=rainbow(16),pch=19, cex=0.6, pt.cex = 1, y.intersp = 1.5)
 ```
+
+## Data cleaning and preprocessing
+
+=> Add stuff here <=
+
+
 
 ## Conclusions
 
