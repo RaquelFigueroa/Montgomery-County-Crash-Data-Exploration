@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+dat = read.csv("/Users/raquel/Desktop/Spring 2018/dataScience/project/Crash_Reporting_-_Drivers_Data.csv")
 ```
 
 ## Project Introduction
@@ -41,9 +42,19 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 
 => Add stuff here <=
 
-## Data exploration and visualization
+```{r test, echo=FALSE}
+accident.times = data.frame(Longitude=dat$Longitude, Latitude=dat$Latitude, hour=strptime(as.character(dat$Crash.Date.Time), "%m/%d/%Y %I:%M:%S %p", tz = "America/New_York")$hour + 1, dat$Collision.Type)
+#1: ratio of colision types per hour
+#table showing num accidents depend on hour/collision type
+hr.table=table(accident.times$hour, accident.times$dat.Collision.Type)
 
-=> Add stuff here <=
+# clean data of UNKNOWN, OTHER, N/A values:
+cols = c("ANGLE MEETS LEFT HEAD ON","ANGLE MEETS LEFT TURN", "ANGLE MEETS RIGHT TURN","HEAD ON","HEAD ON LEFT TURN","OPPOSITE DIR BOTH LEFT TURN","OPPOSITE DIRECTION SIDESWIPE",                       
+          "SAME DIR BOTH LEFT TURN","SAME DIR REAR END", "SAME DIR REND LEFT TURN","SAME DIR REND RIGHT TURN","SAME DIRECTION LEFT TURN","SAME DIRECTION RIGHT TURN",   
+          "SAME DIRECTION SIDESWIPE","SINGLE VEHICLE","STRAIGHT MOVEMENT ANGLE")
+plot(hr.table[,cols], las=1, col=rainbow(16), main = "Ratios of Collisions per Hour of the Day")
+legend('topleft',legend = cols,col=rainbow(16),pch=19, cex=0.6, pt.cex = 1, y.intersp = 1.5)
+```
 
 ## Conclusions
 
