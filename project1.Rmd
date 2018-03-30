@@ -24,17 +24,23 @@ dat = read.csv("https://raw.githubusercontent.com/RaquelFigueroa/Montgomery-Coun
 
 ## Initial data exploration
 
-It should be noted that running the datdat function on the data showed that all but one row had complete data. When investigating that row in the data table, there was no evidence of missing data, except for where an empty string was entered into a cell. It was decided that that particular could contain important information for some visualizations, so all rows were kept.
+It should be noted that running the complete.cases() function and counting the total number of complete rows showed that all but one row was complete. When investigating that row in the data table, there was no evidence of missing data, except for where an empty string was entered into a cell. It was decided that that particular row could contain important information for some visualizations, so all rows were kept. This left us with a total of 65,841 rows of data to investigate.
 
+There are 32 columns of report information that included information like longitude and latitude of a collision, if any injuries were associated with a collision, and even information on the weather during the time of the collision. There are many possibile angles for investigating this data to find some interesting information.
 
+After using the summary() function, it was easy to see which columns of report information might be useful for investigation and which might not be so useful. The columns labeled "Person.ID" and "Vehicle.ID" had all unique values, so this data would not be helpful for generating informative visualizations. There are also a great number of "N/A", "Other", and "Unknown" values that may not be helpful for some visualizations. So there is the need to be aware of when to filter for those values depending on the graphs we hope to create.
 
-
+By running the str() function on the data, it is learned that much for the data is in factor form. Knowing this will help when creating new data frames for visualizations.
 
 
 
 ## Data cleaning and preprocessing
 
-=> Add stuff here <=
+With the great number of "N/A", "Other", and "Unknown" values, there will definitely need to be some data cleaning. In particular, these values were deleted from graphs which depended on visualizations based on a particular value like with categorical data. For example, these exact values were disgarded when mapping the locations of collisions resulting in injuries, property damage, or fatalities. 
+
+There are also many cells where empty strings are located. For one particular barplot, we took into account all of the agencies and their respective average percentages of cells filled in for all reports. If a column of data was less than 90% filled, then that column was discarded from the pool of data for further investigation as those columns were likely filled in only for special cases. For determining percentage of cells per row that were filled in, only empty strings were considered to be "not filled-in." "N/A", "Unknown", and "Other" entries were considered to be thoughtfully entered values as agents took the time to fill those values into the reports instead of leaving a blank.
+
+Ultimately, it was necessary to remain vigilante in determining when to discard certain values with the hopes of creating more fair and informative visualizations of the crash data.
 
 
 ## Data exploration and visualization
