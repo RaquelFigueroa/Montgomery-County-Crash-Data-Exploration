@@ -267,6 +267,7 @@ legend('topleft', title="Weather Conditions",legend = names, col=vec, pch=19, ce
 ```
 
 
+### Locations of Fatal Crashes
 
 We are creating a visual map of where the accidents happened and what was the ACRS Report type. We imagined that fatal crashes involved at least someone was hospitalized, so we wanted to know where happened and we marked them with an X. We found out that the majority of the fatal crashed also happened in the county, however there were still a lot in the outskirts of the county. 
 
@@ -283,16 +284,8 @@ points(Latitude ~ Longitude, data=dat[dat$ACRS.Report.Type=="Fatal Crash",], col
 legend('topleft', title="Report Type",legend = names, col=color, pch=19, cex=0.6, pt.cex = 1, y.intersp = 1.5)
 ```
 
-We are looking at whether the accidents are caused by more locals living in Maryland, or different USA places or other countries. In the figure below it shows that a significant portion of the accidents are from the locals, not that much from drivers from other states and there are some out of country drivers that were involved in some accidents.  
-```{r}
-par(mar=c(8,3,2,3))
-name = names(table(dat$Drivers.License.State))
-maryland = "MD"
-others = c("AB", "AS", "BC", "IT", "MB", "MH", "NL", "NS", "NT", "ON", "PR", "QC", "SK", "UM", "US", "VI", "XX", "YT")
-states = as.vector(setdiff(setdiff(setdiff(name, others),maryland),""))
-barplot(c(sum(dat$Drivers.License.State %in% maryland), sum(dat$Drivers.License.State %in% states), 
-          sum(dat$Drivers.License.State %in% others)), names.arg =c("Local", "USA", "Others") )
-```
+
+###How Weather may Effect Severity of Collision and Who is at Fault
 
 ```{r}
 par(mfrow=c(3,2)) 
@@ -300,12 +293,28 @@ fatal = names(table(dat$ACRS.Report.Type))
 for(i in 1:length(table(dat$ACRS.Report.Type))){
   par(mar=c(4,9,3,3))
   tb = table(dat[dat$ACRS.Report.Type==fatal[i] & dat$Driver.At.Fault=="Yes",]$Weather)
-  barplot(tb,horiz = T,las=2, cex.names = 0.5, main=paste(fatal[i], "Driver At Fault"))
+  barplot(tb,horiz = T,las=2, cex.names = 0.5, main=paste(fatal[i], "Driver At Fault"), col = c("indianred", "lightsteelblue4", "orangered2", "seagreen3"))
   par(mar=c(4,9,3,3))
   tb = table(dat[dat$ACRS.Report.Type==fatal[i] & dat$Driver.At.Fault=="No",]$Weather)
-  barplot(tb,horiz = T,las=2, cex.names = 0.5, main=paste(fatal[i], "Driver Not At Fault"))
+  barplot(tb,horiz = T,las=2, cex.names = 0.5, main=paste(fatal[i], "Driver Not At Fault"), col = c("indianred", "lightsteelblue4", "orangered2", "seagreen3"))
 }
 ```
+
+
+###Accidents Caused by Locals or Visitors
+
+We are looking at whether the accidents are caused by more locals living in Maryland, or different USA places or other countries. In the figure below it shows that a significant portion of the accidents are from the locals, not that much from drivers from other states and there are some out of country drivers that were involved in some accidents.  
+
+```{r}
+par(mar=c(8,3,2,3))
+name = names(table(dat$Drivers.License.State))
+maryland = "MD"
+others = c("AB", "AS", "BC", "IT", "MB", "MH", "NL", "NS", "NT", "ON", "PR", "QC", "SK", "UM", "US", "VI", "XX", "YT")
+states = as.vector(setdiff(setdiff(setdiff(name, others),maryland),""))
+barplot(c(sum(dat$Drivers.License.State %in% maryland), sum(dat$Drivers.License.State %in% states), 
+          sum(dat$Drivers.License.State %in% others)), names.arg =c("Local", "USA", "Others"), col = c("deepskyblue3", "lightblue3") )
+```
+
 
 ###Information About the Agencies Completing Reports
 
