@@ -199,11 +199,9 @@ plot(hr.table[,cols], las=1, col=rainbow(16), main = "Ratios of Collisions per H
 legend('topleft',legend = cols,col=rainbow(16),pch=19, cex=0.6, pt.cex = 1, y.intersp = 1.5)
 ```
 
+For every collision accident what occurred in the county, the graph pinpoints what weather condition was present when it happened. The figure shows that most of the accidents happened within the county and not in the outskirt of the county. The graph does not show any N/A, OTHER, UNKNOWN because these three are unknown. The graph below shows that the majority of the collisions accidents happen downtown or in the town and not on the outskirts of the county. 
 ```{r}
-# what weather conditions were present during these time --> can include the Surface.Condition (see correlation)
-# color the different locations (latitude & longitude) for every wesather type
-# use lat and lon and weather
-# this looks at the accidents that happened using long and lat
+par(mar=c(8,3,2,3))
 plot(Latitude ~ Longitude, data=dat, ylim = c(38.95, 39.33), xlim = c(-77.5,-76.9), pch=".", col="grey")
 len = length(sort(table(dat$Weather), decreasing = TRUE))
 vec = rainbow(len)
@@ -214,9 +212,9 @@ for(i in 1:len){
 legend('topleft', title="Weather Conditions",legend = names, col=vec, pch=19, cex=0.6, pt.cex = 1, y.intersp = 1.5)
 ```
 
-
+We are creating a visual map of where the accidents happened and what was the ACRS Report type. We imagined that fatal crashes involved at least someone was hospitalized, so we wanted to know where happened and we marked them with an X. We found out that the majority of the fatal crashed also happened in the county, however there were still a lot in the outskirts of the county. 
 ```{r}
-# we are creating a visual map of where the accidents happened and what was the ACRS Report type
+par(mar=c(8,3,2,3))
 plot(Latitude ~ Longitude, data=dat, ylim = c(38.95, 39.33), xlim = c(-77.5,-76.9), pch=".", col="grey")
 len = length(sort(table(dat$ACRS.Report.Type), decreasing = TRUE))
 color = rainbow(len)
@@ -228,8 +226,9 @@ points(Latitude ~ Longitude, data=dat[dat$ACRS.Report.Type=="Fatal Crash",], col
 legend('topleft', title="Report Type",legend = names, col=color, pch=19, cex=0.6, pt.cex = 1, y.intersp = 1.5)
 ```
 
+We are looking at whether the accidents are caused by more locals living in Maryland, or different USA places or other countries. In the figure below it shows that a significant portion of the accidents are from the locals, not that much from drivers from other states and there are some out of country drivers that were involved in some accidents.  
 ```{r}
-# we are looking at weather the accidents are couased by more local residents living in Maryland, or different USA places or other countries
+par(mar=c(8,3,2,3))
 name = names(table(dat$Drivers.License.State))
 maryland = "MD"
 others = c("AB", "AS", "BC", "IT", "MB", "MH", "NL", "NS", "NT", "ON", "PR", "QC", "SK", "UM", "US", "VI", "XX", "YT")
