@@ -240,15 +240,16 @@ plot(hr.table[,cols], las=1, col=rainbow(16), main = "Ratios of Collisions per H
 legend('topleft',legend = cols,col=rainbow(16),pch=19, cex=0.6, pt.cex = 1, y.intersp = 1.5)
 ```
 
-This graph shows the ratios of different types of accidents on the y-axis and the ratios of number of accidents across the hours of the day on the x-axis. We can see that the bulk of the accidents occur during the commuter rush hours, indicated by the wider bar sizes. The least number of accidents occur during the late night hours, indicated by the slimmer bar widths. 
+This graph shows the ratios of different types of accidents on the y-axis and the ratios of number of accidents across the hours of the day on the x-axis. We can see that the bulk of the accidents occur during the commuter rush hours, indicated by the wider bar sizes. The least number of accidents occur during the late night hours, indicated by the slimmer bar widths. The heights of the bars in each column represent the ratios of types of accidents. Taller bars indicate a greater number of accidents, while slim lines indicate the number of accidents of the corresponding type is relatively low. The legend shows the color code for accident types and bars in the graph.
 
 The most represented type of accident that occurs during rush-hour is "Same direction rear-end." In contrast, the type of accident that occurs the most during the late night hours is due to "Single vehicle." This is expected as there are more cars on the roads during rush-hour, increasing chances of collisions between vehicles. While the smaller number of cars on the road during the late night hours decrease the likelihood of collisions between vehicles, but increase collisions involving only one car.
 
-A particularly interesting hour is the 7:00 am hour. The number of accidents occuring at 7:00 am was much less than the rush-hour times, but much greater than the early morning times. This transitional period demonstrates interesting qualities. One particular are of interest is in the large increase in the ratio "Same direction rear-end" accidents from 6:00 am. This increase is likely due to the increasing number of vehicles on the roads. Another interesting aspect is the ratio of "Head-on left turn" accidents compared to the 8:00 am hour, when the ratio decreases. Perhaps 7:00 am hour drivers are taking more risks to catch lights than their 8:00 am hour counterparts.
+A particularly interesting hour is the 7:00 am hour. The number of accidents occuring at 7:00 am was much less than the rush-hour times, but much greater than the early morning times. This transitional period leads to some interesting qualities. One particular aree of interest is in the large increase in the ratio "Same direction rear-end" accidents from 6:00 am. This increase is likely due to the increasing number of vehicles on the roads. Another interesting aspect is the ratio of "Head-on left turn" accidents compared to the 8:00 am hour, when the ratio decreases. Perhaps 7:00 am hour drivers are taking more risks to catch lights than their 8:00 am hour counterparts.
 
+
+###Weather Conditions and Collisions
 
 For every collision accident what occurred in the county, the graph pinpoints what weather condition was present when it happened. The figure shows that most of the accidents happened within the county and not in the outskirt of the county. The graph does not show any N/A, OTHER, UNKNOWN because these three are unknown. The graph below shows that the majority of the collisions accidents happen downtown or in the town and not on the outskirts of the county. 
-
 
 
 ```{r}
