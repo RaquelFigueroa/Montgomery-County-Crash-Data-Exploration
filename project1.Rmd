@@ -61,16 +61,19 @@ barplot(table(hours), main = "Number of Crashes per Hour of the Day", col = "fir
 ```
 
 It can be observed that the rush hour times are from 8:00 am - 10:00 am and from 4:00 pm - 7:00 pm.
+
 This has led to following time groupings:
 
 
-Time Group | Hours Interval
-------------------- | ---------------
-Rush Hour           | 8:00 am - 10:00 am, 4:00 pm - 7:00 pm
-School Hours        | 11:00 am - 3:00 pm
-Night Hours         | 8:00 pm - 10:00 pm
-Late Night Hours    | 11:00 pm - 3:00 am
-Early Morning Hours | 4:00 am - 7:00 am
+Time Group | 24-Hour Interval| 12-Hour Interval  
+------------------- | ---------------| ---------------
+Rush Hour           | 8:00 - 10:00, 16:00 - 19:00 | 8:00 am - 10:00 am, 4:00 pm - 7:00 pm
+School Hours        | 11:00 - 15:00 | 11:00 am - 3:00 pm
+Night Hours         | 20:00 - 22:00 | 8:00 pm - 10:00 pm
+Late Night Hours    | 23:00 - 3:00 | 11:00 pm - 3:00 am
+Early Morning Hours | 4:00 - 7:00 | 4:00 am - 7:00 am
+
+Note: The time groupings are in a 24-hour clock system and the corresponding 12-hour clock times are also shown.
 
 
 
@@ -90,19 +93,20 @@ accident.times = data.frame(Longitude=dat$Longitude, Latitude=dat$Latitude, hour
 
 # Create DF with accident.time as whole hour, longitude, latitude, collision type only for rush-hour times:
 rush.hours = c(8, 9, 10, 16, 17, 18, 19)
-accident.hours = accident.times[is.element(accident.times$hour ,rush.hours),]
+accident.rush.hour = accident.times[is.element(accident.times$hour ,rush.hours),]
 
 # create a color vector:
-colors = c("chocolate","darkorchid", "goldenrod4", "red3", "darkslateblue","firebrick1","firebrick4")
-names(colors) = c(8, 9, 10, 16, 17, 18, 19)
+rush.colors = c("chocolate","darkorchid", "goldenrod4", "red3", "darkslateblue","firebrick1","firebrick4")
+names(rush.colors) = c(8, 9, 10, 16, 17, 18, 19)
 
-plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.3, -76.92), ylim = c(38.94, 39.2), pch = ".", col=colors[as.character(accident.times$hour)], main = "Montgomery County Accident Locations: Rush Hour", ylab = "Latitude", xlab = "Longitude")
-legend('topright',legend = rush.hours,col=colors[as.character(rush.hours)],pch=19, cex=0.7)
+# Plot accidents:
+plot(accident.rush.hour$Longitude, accident.rush.hour$Latitude, xlim = c(-77.3, -76.92), ylim = c(38.94, 39.2), pch = ".", col=rush.colors[as.character(accident.times$hour)], main = "Montgomery County Accident Locations: Rush Hour", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = rush.hours,col=rush.colors[as.character(rush.hours)],pch=19, cex=0.7)
 
 
- 
-plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.0, -77.05), ylim = c(38.975, 39.025), pch = 20, col=colors[as.character(accident.times$hour)], main = "Downtown Silver Spring Accident Locations: Rush Hour", ylab = "Latitude", xlab = "Longitude")
-legend('topright',legend = rush.hours,col=colors[as.character(rush.hours)],pch=19, cex=0.7)
+# Plot Close-up of Silver Spring: 
+plot(accident.rush.hour$Longitude, accident.rush.hour$Latitude, xlim = c(-77.0175, -77.035), ylim = c(38.98, 39.005), pch = 20, col=rush.colors[as.character(accident.times$hour)], main = "Downtown Silver Spring Accident Locations: Rush Hour", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = rush.hours,col=rush.colors[as.character(rush.hours)],pch=19, cex=0.7)
 
 ```
 
@@ -113,17 +117,19 @@ legend('topright',legend = rush.hours,col=colors[as.character(rush.hours)],pch=1
 
 # Create DF with accident.time as whole hour, longitude, latitude, collision type only for school-hour times:
 school.hours = c(11, 12, 13, 14, 15)
-accident.hours = accident.times[is.element(accident.times$hour ,school.hours),]
+accident.school.hours = accident.times[is.element(accident.times$hour ,school.hours),]
 
 # create a color vector:
-colors = c("blue", "deepskyblue", "purple", "springgreen","orchid3")
-names(colors) = c(11, 12, 13, 14, 15)
+school.hours.colors = c("blue", "deepskyblue", "purple", "springgreen","orchid3")
+names(school.hours.colors) = c(11, 12, 13, 14, 15)
 
-plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.3, -76.92), ylim = c(38.94, 39.2), pch = ".", col=colors[as.character(accident.hours$hour)], main = "Montgomery County Accident Locations: School Hours", ylab = "Latitude", xlab = "Longitude")
-legend('topright',legend = school.hours,col=colors[as.character(school.hours)],pch=19, cex=0.7)
+#Plot accidents:
+plot(accident.school.hours$Longitude, accident.school.hours$Latitude, xlim = c(-77.3, -76.92), ylim = c(38.94, 39.2), pch = ".", col=school.hours.colors[as.character(accident.school.hours$hour)], main = "Montgomery County Accident Locations: School Hours", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = school.hours,col=school.hours.colors[as.character(school.hours)],pch=19, cex=0.7)
 
-plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.0, -77.05), ylim = c(38.975, 39.025), pch = 20, col=colors[as.character(accident.hours$hour)], main = "Downtown Silver Spring Accident Locations: School Hours", ylab = "Latitude", xlab = "Longitude")
-legend('topright',legend = school.hours,col=colors[as.character(school.hours)],pch=19, cex=0.7)
+# Plot close-up of Silver Spring
+plot(accident.school.hours$Longitude, accident.school.hours$Latitude, xlim = c(-77.0175, -77.035), ylim = c(38.98, 39.005), pch = 20, col=school.hours.colors[as.character(accident.school.hours$hour)], main = "Downtown Silver Spring Accident Locations: School Hours", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = school.hours,col=school.hours.colors[as.character(school.hours)],pch=19, cex=0.7)
 ```
 
 ####Accidents during Night Hours
@@ -131,17 +137,19 @@ legend('topright',legend = school.hours,col=colors[as.character(school.hours)],p
 ```{r, echo=TRUE}
 # Create DF with accident.time as whole hour, longitude, latitude, collision type only for latenight-hour times:
 night.hours = c(20, 21, 22)
-accident.hours = accident.times[is.element(accident.times$hour ,night.hours),]
+accident.night = accident.times[is.element(accident.times$hour ,night.hours),]
 
 # create a color vector:
-colors = c("mediumturquoise","mediumvioletred", "midnightblue")
-names(colors) = c(20, 21, 22)
+night.hours.colors = c("mediumturquoise","mediumvioletred", "midnightblue")
+names(night.hours.colors) = c(20, 21, 22)
 
-plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.3, -76.92), ylim = c(38.94, 39.2), pch = ".", col=colors[as.character(accident.hours$hour)], main="Montgomery County Accident Locations: Night Hours", ylab = "Latitude", xlab = "Longitude")
-legend('topright',legend = night.hours,col=colors[as.character(night.hours)],pch=19, cex=0.7)
+# Plot accidents;
+plot(accident.night$Longitude, accident.night$Latitude, xlim = c(-77.3, -76.92), ylim = c(38.94, 39.2), pch = ".", col=night.hours.colors[as.character(accident.night$hour)], main="Montgomery County Accident Locations: Night Hours", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = night.hours,col=night.hours.colors[as.character(night.hours)],pch=19, cex=0.7)
 
-plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.0, -77.05), ylim = c(38.975, 39.025), pch = 20, col=colors[as.character(accident.hours$hour)], main="Downtown Silver Spring Accident Locations: Night Hours", ylab = "Latitude", xlab = "Longitude")
-legend('topright',legend = night.hours,col=colors[as.character(night.hours)],pch=19, cex=0.7)
+# Plot close-up of Silver Spring:
+plot(accident.night$Longitude, accident.night$Latitude, xlim = c(-77.0175, -77.035), ylim = c(38.98, 39.005), pch = 20, col=night.hours.colors[as.character(accident.night$hour)], main="Downtown Silver Spring Accident Locations: Night Hours", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = night.hours,col=night.hours.colors[as.character(night.hours)],pch=19, cex=0.7)
 ```
 
 ####Accidents during Late Night Hours
@@ -149,17 +157,19 @@ legend('topright',legend = night.hours,col=colors[as.character(night.hours)],pch
 ```{r, echo=TRUE}
 # Create DF with accident.time as whole hour, longitude, latitude, collision type only for latenight-hour times:
 latenight.hours = c(1, 2, 3, 23, 24)
-accident.hours = accident.times[is.element(accident.times$hour ,latenight.hours),]
+accident.late.night = accident.times[is.element(accident.times$hour ,latenight.hours),]
 
 # create a color vector:
-colors = c("blue","purple", "springgreen", "orangered", "yellow2")
-names(colors) = c(1, 2, 3, 23, 24)
+late.night.colors = c("blue","purple", "springgreen", "orangered", "yellow2")
+names(late.night.colors) = c(1, 2, 3, 23, 24)
 
-plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.3, -76.92), ylim = c(38.94, 39.2), pch = ".", col=colors[as.character(accident.hours$hour)], main="Montgomery County Accident Locations: Late Night Hours", ylab = "Latitude", xlab = "Longitude")
-legend('topright',legend = latenight.hours,col=colors[as.character(latenight.hours)],pch=19, cex=0.7)
+# Plot accidents:
+plot(accident.late.night$Longitude, accident.late.night$Latitude, xlim = c(-77.3, -76.92), ylim = c(38.94, 39.2), pch = ".", col=late.night.colors[as.character(accident.late.night$hour)], main="Montgomery County Accident Locations: Late Night Hours", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = latenight.hours,col=late.night.colors[as.character(latenight.hours)],pch=19, cex=0.7)
 
-plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.0, -77.05), ylim = c(38.975, 39.025), pch = 20, col=colors[as.character(accident.hours$hour)], main="Downtown Silver Spring Accident Locations: late Night Hours", ylab = "Latitude", xlab = "Longitude")
-legend('topright',legend = latenight.hours,col=colors[as.character(latenight.hours)],pch=19, cex=0.7)
+# Plot close-up of Silver Spring:
+plot(accident.late.night$Longitude, accident.late.night$Latitude, xlim = c(-77.0175, -77.035), ylim = c(38.98, 39.005), pch = 20, col=late.night.colors[as.character(accident.late.night$hour)], main="Downtown Silver Spring Accident Locations: late Night Hours", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = latenight.hours,col=late.night.colors[as.character(latenight.hours)],pch=19, cex=0.7)
 ```
 
 
@@ -168,22 +178,53 @@ legend('topright',legend = latenight.hours,col=colors[as.character(latenight.hou
 ```{r, echo=TRUE}
 # Create DF with accident.time as whole hour, longitude, latitude, collision type only for rush-hour times:
 morning.hours = c(4, 5, 6, 7)
-accident.hours = accident.times[is.element(accident.times$hour ,morning.hours),]
+accident.early.morning = accident.times[is.element(accident.times$hour ,morning.hours),]
 
 # create a color vector:
 colors = c("blue","purple", "springgreen", "orangered")
 names(colors) = c(4, 5, 6, 7)
 
-plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.3, -76.92), ylim = c(38.94, 39.2), pch = ".", col=colors[as.character(accident.hours$hour)], main="Montgomery County Accident Locations: Early Morning Hours", ylab = "Latitude", xlab = "Longitude")
+# Plot accidents:
+plot(accident.early.morning$Longitude, accident.early.morning$Latitude, xlim = c(-77.3, -76.92), ylim = c(38.94, 39.2), pch = ".", col=colors[as.character(accident.early.morning$hour)], main="Montgomery County Accident Locations: Early Morning Hours", ylab = "Latitude", xlab = "Longitude")
 legend('topright',legend = morning.hours,col=colors[as.character(morning.hours)],pch=19, cex=0.7)
 
-#close-up:
-plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.0, -77.05), ylim = c(38.975, 39.025), pch = 20, col=colors[as.character(accident.hours$hour)], main="Downtown Silver Spring Accident Locations: Early Morning Hours", ylab = "Latitude", xlab = "Longitude")
+# Plot close-up of Silver Spring:
+plot(accident.early.morning$Longitude, accident.early.morning$Latitude, xlim = c(-77.0175, -77.035), ylim = c(38.98, 39.005), pch = 20, col=colors[as.character(accident.early.morning$hour)], main="Downtown Silver Spring Accident Locations: Early Morning Hours", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = morning.hours,col=colors[as.character(morning.hours)],pch=19, cex=0.7)
+
+
+
+```
+
+####Accidents Comparison of Downtown Silver Spring
+
+```{r, echo=TRUE}
+layout(matrix(c(1,1,2,2,3,3,
+                1,1,2,2,3,3,
+                4,4,5,5,0,0,
+                4,4,5,5,0,0), nrow = 4, ncol = 6, byrow = TRUE))
+
+plot(accident.rush.hour$Longitude, accident.rush.hour$Latitude, xlim = c(-77.02, -77.035), ylim = c(38.98, 39.005), pch = 20, col=rush.colors[as.character(accident.times$hour)], main = "Rush Hour", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = rush.hours,col=rush.colors[as.character(rush.hours)],pch=19, cex=0.7)
+
+plot(accident.school.hours$Longitude, accident.school.hours$Latitude, xlim = c(-77.02, -77.035), ylim = c(38.98, 39.005), pch = 20, col=school.hours.colors[as.character(accident.school.hours$hour)], main = "School Hours", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = school.hours,col=school.hours.colors[as.character(school.hours)],pch=19, cex=0.7)
+
+plot(accident.night$Longitude, accident.night$Latitude, xlim = c(-77.02, -77.035), ylim = c(38.98, 39.005), pch = 20, col=night.hours.colors[as.character(accident.night$hour)], main="Night Hours", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = night.hours,col=night.hours.colors[as.character(night.hours)],pch=19, cex=0.7)
+
+plot(accident.late.night$Longitude, accident.late.night$Latitude, xlim = c(-77.02, -77.035), ylim = c(38.98, 39.005), pch = 20, col=late.night.colors[as.character(accident.late.night$hour)], main="late Night Hours", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = latenight.hours,col=late.night.colors[as.character(latenight.hours)],pch=19, cex=0.7)
+
+plot(accident.early.morning$Longitude, accident.early.morning$Latitude, xlim = c(-77.02, -77.035), ylim = c(38.98, 39.005), pch = 20, col=colors[as.character(accident.early.morning$hour)], main="Early Morning Hours", ylab = "Latitude", xlab = "Longitude")
 legend('topright',legend = morning.hours,col=colors[as.character(morning.hours)],pch=19, cex=0.7)
 ```
 
+A side-by-side comparison of the plots showing accidents in the Silver Spring area show that there are many accidents occuring during all hours of the day. What is striking about this comparison is the number of accidents that occured from Latitudes 39.985 - 39.995 and Longitudes -77.024 - -77.0275 during the late night and early morning hours of 3:00 - 4:00. This can be attributed to accidents influenced by alcohol or other substances. When investigating the local nightlife scene through Yelp, it was discovered that local bar laws require that all bars acquire about 50% of their revenue from food sales. So, there are no legal establishments that sell only alcohol, possibly decreasing the likelihood of excessive drinking. Furthermore, many of the downtown Silver Spring restaurants and bars close between 11:00 pm - 12:00 am. Some close later, around 2:00 am and only one was found to close at 3:00 pm. This could mean that there are a few very late-night bar hoppers that do end up driving and getting into the late night accidents reported in this data. This may indicate that there is a need for increased enforcement for the prevention of driving under the influence in the downtown Silver Spring area.
 
+###Types of Accidents
 
+Diving deeper into the investigations of accidents by hours, the next graph demonstrates the types of accidents that occur per hour of the day.
 
 ```{r}
 accident.times = data.frame(Longitude=dat$Longitude, Latitude=dat$Latitude, hour=strptime(as.character(dat$Crash.Date.Time), "%m/%d/%Y %I:%M:%S %p", tz = "America/New_York")$hour + 1, dat$Collision.Type)
@@ -199,7 +240,17 @@ plot(hr.table[,cols], las=1, col=rainbow(16), main = "Ratios of Collisions per H
 legend('topleft',legend = cols,col=rainbow(16),pch=19, cex=0.6, pt.cex = 1, y.intersp = 1.5)
 ```
 
+This graph shows the ratios of different types of accidents on the y-axis and the ratios of number of accidents across the hours of the day on the x-axis. We can see that the bulk of the accidents occur during the commuter rush hours, indicated by the wider bar sizes. The least number of accidents occur during the late night hours, indicated by the slimmer bar widths. 
+
+The most represented type of accident that occurs during rush-hour is "Same direction rear-end." In contrast, the type of accident that occurs the most during the late night hours is due to "Single vehicle." This is expected as there are more cars on the roads during rush-hour, increasing chances of collisions between vehicles. While the smaller number of cars on the road during the late night hours decrease the likelihood of collisions between vehicles, but increase collisions involving only one car.
+
+A particularly interesting hour is the 7:00 am hour. The number of accidents occuring at 7:00 am was much less than the rush-hour times, but much greater than the early morning times. This transitional period demonstrates interesting qualities. One particular are of interest is in the large increase in the ratio "Same direction rear-end" accidents from 6:00 am. This increase is likely due to the increasing number of vehicles on the roads. Another interesting aspect is the ratio of "Head-on left turn" accidents compared to the 8:00 am hour, when the ratio decreases. Perhaps 7:00 am hour drivers are taking more risks to catch lights than their 8:00 am hour counterparts.
+
+
 For every collision accident what occurred in the county, the graph pinpoints what weather condition was present when it happened. The figure shows that most of the accidents happened within the county and not in the outskirt of the county. The graph does not show any N/A, OTHER, UNKNOWN because these three are unknown. The graph below shows that the majority of the collisions accidents happen downtown or in the town and not on the outskirts of the county. 
+
+
+
 ```{r}
 par(mar=c(8,3,2,3))
 plot(Latitude ~ Longitude, data=dat, ylim = c(38.95, 39.33), xlim = c(-77.5,-76.9), pch=".", col="grey")
