@@ -74,10 +74,10 @@ Early Morning Hours | 4:00 am - 7:00 am
 
 
 
-
 Diving deeper into groupings of accidents by time, the time groups were used to determine accident locations throughout Montgomery County. By doing this, we can find accident locations that seem interesting and may warrant further investigation. A particular location of interest was determined to be in the Downtown Silver Spring area. This location had high number of accidents throughout all times of the day, indicating that it may be an area that local civil engineering departments may need to investigate for hazardous conditions.
 
 The following scatter plots demonstrate accident locations using their longitudes and latitudes. The accident locations follow the Montgomery County highways and street systems, creating a map of the county that can be compared to an actual map which can help in identifying locations.
+
 
 Below each scatter plot of the accidents in the greater Montgomery County, there is a corresponding scatter plot that is zoomed in on the Downtown Silver Spring area for a more detailed view of accident locations and their times.
 
@@ -185,9 +185,6 @@ legend('topright',legend = morning.hours,col=colors[as.character(morning.hours)]
 
 
 
-
-
-
 ```{r}
 accident.times = data.frame(Longitude=dat$Longitude, Latitude=dat$Latitude, hour=strptime(as.character(dat$Crash.Date.Time), "%m/%d/%Y %I:%M:%S %p", tz = "America/New_York")$hour + 1, dat$Collision.Type)
 #1: ratio of colision types per hour
@@ -239,6 +236,19 @@ others = c("AB", "AS", "BC", "IT", "MB", "MH", "NL", "NS", "NT", "ON", "PR", "QC
 states = as.vector(setdiff(setdiff(setdiff(name, others),maryland),""))
 barplot(c(sum(dat$Drivers.License.State %in% maryland), sum(dat$Drivers.License.State %in% states), 
           sum(dat$Drivers.License.State %in% others)), names.arg =c("Local", "USA", "Others") )
+```
+
+```{r}
+par(mfrow=c(3,2)) 
+fatal = names(table(dat$ACRS.Report.Type))
+for(i in 1:length(table(dat$ACRS.Report.Type))){
+  par(mar=c(3,9,3,3))
+  tb = table(dat[dat$ACRS.Report.Type==fatal[i] & dat$Driver.At.Fault=="Yes",]$Weather)
+  barplot(tb,horiz = T,las=2, cex.names = 0.5, main=paste(fatal[i], "Driver At Fault"))
+  par(mar=c(3,9,3,3))
+  tb = table(dat[dat$ACRS.Report.Type==fatal[i] & dat$Driver.At.Fault=="No",]$Weather)
+  barplot(tb,horiz = T,las=2, cex.names = 0.5, main=paste(fatal[i], "Driver Not At Fault"))
+}
 ```
 
 ## Conclusions
