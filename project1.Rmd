@@ -342,6 +342,7 @@ Only the report fields with at least 90% of filled-in data was used. Also, only 
 The resulting barplot shows that the Rockville agency has the record of completing the most fields of a report, while Gaithersburg has the worst record. This may indicate that agents of Gaithersburg do not feel the need to fill out reports to the extent of other agencies. For more accurate data, it would be important for all agencies to complete reports to the best of their abilities for more accurate assessments. This information may be helpful for future data analysis as well. A data scientist may choose to work solely with reports compiled by one agency over another for a more fair analysis and data interpretation.
 
 It should be noted that it is unclear if the agencies with similar names are in fact the same agencies (e.g. "Rockville" and "Rockville Police Departme").
+
 ## Conclusions
 
 => One paragraph about what you learned, issues you faced, etc. <=
