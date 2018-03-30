@@ -199,6 +199,19 @@ barplot(c(sum(dat$Drivers.License.State %in% maryland), sum(dat$Drivers.License.
           sum(dat$Drivers.License.State %in% others)), names.arg =c("Local", "USA", "Others") )
 ```
 
+```{r}
+par(mfrow=c(3,2)) 
+fatal = names(table(dat$ACRS.Report.Type))
+for(i in 1:length(table(dat$ACRS.Report.Type))){
+  par(mar=c(3,9,3,3))
+  tb = table(dat[dat$ACRS.Report.Type==fatal[i] & dat$Driver.At.Fault=="Yes",]$Weather)
+  barplot(tb,horiz = T,las=2, cex.names = 0.5, main=paste(fatal[i], "w/ Driver At Fault"))
+  par(mar=c(3,9,3,3))
+  tb = table(dat[dat$ACRS.Report.Type==fatal[i] & dat$Driver.At.Fault=="No",]$Weather)
+  barplot(tb,horiz = T,las=2, cex.names = 0.5, main=paste(fatal[i], "w/ Driver Not At Fault"))
+}
+```
+
 ## Conclusions
 
 => One paragraph about what you learned, issues you faced, etc. <=
