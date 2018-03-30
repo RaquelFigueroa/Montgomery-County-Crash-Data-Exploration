@@ -1,7 +1,7 @@
 ---
 title: 'Project 1: Montgomery County Crash Data'
 author: "Regie & Raquel"
-date: "3/27/2018"
+date: "3/30/2018"
 output: html_document
 ---
 
@@ -16,16 +16,6 @@ dat = read.csv("https://raw.githubusercontent.com/RaquelFigueroa/Montgomery-Coun
 
 => explain what you will do in a sentence or two <=
 
-<<<<<<< HEAD
-=======
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r}
-summary(cars)
-```
->>>>>>> 76f61e26838e777d3991524dedd4943d0090e1d4
 
 ## Project Data
 
@@ -34,26 +24,13 @@ summary(cars)
 
 ## Initial data exploration
 
-Determining rush hour times for more appropriate data analysis:
-```{r}
-# Determine rush hour times
-# only use rows without missing data:
-complete.dat = dat[complete.cases(dat),]
+It should be noted that running the datdat function on the data showed that all but one row had complete data. When investigating that row in the data table, there was no evidence of missing data, except for where an empty string was entered into a cell. It was decided that that particular could contain important information for some visualizations, so all rows were kept.
 
-# get Crash.Date.Time in easy-to-use form:
-date.time = strptime(as.character(complete.dat$Crash.Date.Time), "%m/%d/%Y %I:%M:%S %p", tz = "America/New_York")
 
-# get just the hours from our usable dat.time:
-hours = date.time$hour + 1
 
-# Create a table of hours and number of crashes per hour of day
-table(hours)
 
-#create barplot of crashes per hour to determine hours of highest number of crashes
-barplot(table(hours), main = "Number of Crashes per Hour of the Day", col = "firebrick")
-```
 
-It can be observed that the rush hour times are from 8:00 am - 10:00 am and from 4:00 pm - 7:00 pm.
+
 
 ## Data cleaning and preprocessing
 
@@ -62,97 +39,156 @@ It can be observed that the rush hour times are from 8:00 am - 10:00 am and from
 
 ## Data exploration and visualization
 
-=> Add stuff here <=
+This data exploration began with learning the times during which most accidents occur. 
+By creating a bar graph of the number of accidents per hour of the day, it would be easier
+to group times of accidents in a more fair manner. The following barplot shows which hours
+have the highest numbers of accidents and which have the least. 
 
-<<<<<<< HEAD
-Accidents during Rush Hours
+We can now see the hours during which the highest amount of accidents occur and the hours
+during which the least number of accidents take place. The hours with the highest numbers of
+accidents corresponds to the rush hours attributed to commutes to and from work.
 
-```{r rush.hour, echo=FALSE}
-# View map of accidents during rush hour
+```{r, echo=TRUE}
+# Determine rush hour times
+# get Crash.Date.Time in easy-to-use form:
+date.time = strptime(as.character(dat$Crash.Date.Time), "%m/%d/%Y %I:%M:%S %p", tz = "America/New_York")
 
-# only use rows without missing data:
-complete.dat = dat[complete.cases(dat),]
+# get just the hours from our usable dat.time:
+hours = date.time$hour + 1
+
+#create barplot of crashes per hour to determine hours of highest number of crashes
+barplot(table(hours), main = "Number of Crashes per Hour of the Day", col = "firebrick")
+```
+
+It can be observed that the rush hour times are from 8:00 am - 10:00 am and from 4:00 pm - 7:00 pm.
+This has led to following time groupings:
+
+
+Time Group | Hours Interval
+------------------- | ---------------
+Rush Hour           | 8:00 am - 10:00 am, 4:00 pm - 7:00 pm
+School Hours        | 11:00 am - 3:00 pm
+Night Hours         | 8:00 pm - 10:00 pm
+Late Night Hours    | 11:00 pm - 3:00 am
+Early Morning Hours | 4:00 am - 7:00 am
+
+
+
+
+Diving deeper into groupings of accidents by time, the time groups were used to determine accident locations throughout Montgomery County. By doing this, we can find accident locations that seem interesting and may warrant further investigation. A particular location of interest was determined to be in the Downtown Silver Spring area. This location had high number of accidents throughout all times of the day, indicating that it may be an area that local civil engineering departments may need to investigate for hazardous conditions.
+
+The following scatter plots demonstrate accident locations using their longitudes and latitudes. The accident locations follow the Montgomery County highways and street systems, creating a map of the county that can be compared to an actual map which can help in identifying locations.
+
+Below each scatter plot of the accidents in the greater Montgomery County, there is a corresponding scatter plot that is zoomed in on the Downtown Silver Spring area for a more detailed view of accident locations and their times.
+
+####Accidents during Rush Hour
+
+```{r, echo=TRUE}
+#Create DF with Longitude, Latitude, hour of accident, collision type.
+#This DF will be used for many plots
+accident.times = data.frame(Longitude=dat$Longitude, Latitude=dat$Latitude, hour=strptime(as.character(dat$Crash.Date.Time), "%m/%d/%Y %I:%M:%S %p", tz = "America/New_York")$hour + 1, dat$Collision.Type)
 
 # Create DF with accident.time as whole hour, longitude, latitude, collision type only for rush-hour times:
 rush.hours = c(8, 9, 10, 16, 17, 18, 19)
-accident.times = data.frame(Longitude=complete.dat$Longitude, Latitude=complete.dat$Latitude, hour=strptime(as.character(complete.dat$Crash.Date.Time), "%m/%d/%Y %I:%M:%S %p", tz = "America/New_York")$hour + 1, complete.dat$Collision.Type)
-accident.times = accident.times[is.element(accident.times$hour ,rush.hours),]
+accident.hours = accident.times[is.element(accident.times$hour ,rush.hours),]
 
 # create a color vector:
 colors = c("chocolate","darkorchid", "goldenrod4", "red3", "darkslateblue","firebrick1","firebrick4")
 names(colors) = c(8, 9, 10, 16, 17, 18, 19)
 
-plot(accident.times$Longitude, accident.times$Latitude, xlim = c(-77.3, -76.92), ylim = c(38.94, 39.2), pch = ".", col=colors[as.character(accident.times$hour)])
+plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.3, -76.92), ylim = c(38.94, 39.2), pch = ".", col=colors[as.character(accident.times$hour)], main = "Montgomery County Accident Locations: Rush Hour", ylab = "Latitude", xlab = "Longitude")
 legend('topright',legend = rush.hours,col=colors[as.character(rush.hours)],pch=19, cex=0.7)
+
+
+ 
+plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.0, -77.05), ylim = c(38.975, 39.025), pch = 20, col=colors[as.character(accident.times$hour)], main = "Downtown Silver Spring Accident Locations: Rush Hour", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = rush.hours,col=colors[as.character(rush.hours)],pch=19, cex=0.7)
+
 ```
 
-Accidents during School Hours
+####Accidents during School Hours
 
-```{r school.hour, echo=FALSE}
+```{r, echo=TRUE}
 # View map of accidents during school hours
-
-# only use rows without missing data:
-complete.dat = dat[complete.cases(dat),]
 
 # Create DF with accident.time as whole hour, longitude, latitude, collision type only for school-hour times:
 school.hours = c(11, 12, 13, 14, 15)
-
-accident.times = data.frame(Longitude=complete.dat$Longitude, Latitude=complete.dat$Latitude, hour=strptime(as.character(complete.dat$Crash.Date.Time), "%m/%d/%Y %I:%M:%S %p", tz = "America/New_York")$hour + 1, complete.dat$Collision.Type)
-accident.times = accident.times[is.element(accident.times$hour ,school.hours),]
+accident.hours = accident.times[is.element(accident.times$hour ,school.hours),]
 
 # create a color vector:
 colors = c("blue", "deepskyblue", "purple", "springgreen","orchid3")
 names(colors) = c(11, 12, 13, 14, 15)
 
-plot(accident.times$Longitude, accident.times$Latitude, xlim = c(-77.3, -76.92), ylim = c(38.94, 39.2), pch = ".", col=colors[as.character(accident.times$hour)])
+plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.3, -76.92), ylim = c(38.94, 39.2), pch = ".", col=colors[as.character(accident.hours$hour)], main = "Montgomery County Accident Locations: School Hours", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = school.hours,col=colors[as.character(school.hours)],pch=19, cex=0.7)
+
+plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.0, -77.05), ylim = c(38.975, 39.025), pch = 20, col=colors[as.character(accident.hours$hour)], main = "Downtown Silver Spring Accident Locations: School Hours", ylab = "Latitude", xlab = "Longitude")
 legend('topright',legend = school.hours,col=colors[as.character(school.hours)],pch=19, cex=0.7)
 ```
 
-```{r morning.hour, echo=FALSE}
-# View map of accidents during morning hours
+####Accidents during Night Hours
 
-# only use rows without missing data:
-complete.dat = dat[complete.cases(dat),]
-
-# Create DF with accident.time as whole hour, longitude, latitude, collision type only for rush-hour times:
-morning.hours = c(4, 5, 6, 7)
-
-accident.times = data.frame(Longitude=complete.dat$Longitude, Latitude=complete.dat$Latitude, hour=strptime(as.character(complete.dat$Crash.Date.Time), "%m/%d/%Y %I:%M:%S %p", tz = "America/New_York")$hour + 1, complete.dat$Collision.Type)
-accident.times = accident.times[is.element(accident.times$hour ,morning.hours),]
+```{r, echo=TRUE}
+# Create DF with accident.time as whole hour, longitude, latitude, collision type only for latenight-hour times:
+night.hours = c(20, 21, 22)
+accident.hours = accident.times[is.element(accident.times$hour ,night.hours),]
 
 # create a color vector:
-colors = c("blue","purple", "springgreen", "orangered")
-names(colors) = c(4, 5, 6, 7)
+colors = c("mediumturquoise","mediumvioletred", "midnightblue")
+names(colors) = c(20, 21, 22)
 
-plot(accident.times$Longitude, accident.times$Latitude, xlim = c(-77.3, -76.92), ylim = c(38.94, 39.2), pch = ".", col=colors[as.character(accident.times$hour)])
-legend('topright',legend = morning.hours,col=colors[as.character(morning.hours)],pch=19, cex=0.7)
+plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.3, -76.92), ylim = c(38.94, 39.2), pch = ".", col=colors[as.character(accident.hours$hour)], main="Montgomery County Accident Locations: Night Hours", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = night.hours,col=colors[as.character(night.hours)],pch=19, cex=0.7)
+
+plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.0, -77.05), ylim = c(38.975, 39.025), pch = 20, col=colors[as.character(accident.hours$hour)], main="Downtown Silver Spring Accident Locations: Night Hours", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = night.hours,col=colors[as.character(night.hours)],pch=19, cex=0.7)
 ```
 
-```{r latenight.hour, echo=FALSE}
-# View map of accidents during late night hours
+####Accidents during Late Night Hours
 
-# only use rows without missing data:
-complete.dat = dat[complete.cases(dat),]
-
+```{r, echo=TRUE}
 # Create DF with accident.time as whole hour, longitude, latitude, collision type only for latenight-hour times:
 latenight.hours = c(1, 2, 3, 23, 24)
-accident.times = data.frame(Longitude=complete.dat$Longitude, Latitude=complete.dat$Latitude, hour=strptime(as.character(complete.dat$Crash.Date.Time), "%m/%d/%Y %I:%M:%S %p", tz = "America/New_York")$hour + 1, complete.dat$Collision.Type)
-accident.times = accident.times[is.element(accident.times$hour ,latenight.hours),]
+accident.hours = accident.times[is.element(accident.times$hour ,latenight.hours),]
 
 # create a color vector:
 colors = c("blue","purple", "springgreen", "orangered", "yellow2")
 names(colors) = c(1, 2, 3, 23, 24)
 
-plot(accident.times$Longitude, accident.times$Latitude, xlim = c(-77.3, -76.92), ylim = c(38.94, 39.2), pch = ".", col=colors[as.character(accident.times$hour)])
+plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.3, -76.92), ylim = c(38.94, 39.2), pch = ".", col=colors[as.character(accident.hours$hour)], main="Montgomery County Accident Locations: Late Night Hours", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = latenight.hours,col=colors[as.character(latenight.hours)],pch=19, cex=0.7)
+
+plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.0, -77.05), ylim = c(38.975, 39.025), pch = 20, col=colors[as.character(accident.hours$hour)], main="Downtown Silver Spring Accident Locations: late Night Hours", ylab = "Latitude", xlab = "Longitude")
 legend('topright',legend = latenight.hours,col=colors[as.character(latenight.hours)],pch=19, cex=0.7)
 ```
 
 
+####Accidents during Early Morning Hours
 
-```{r test, echo=FALSE}
-=======
+```{r, echo=TRUE}
+# Create DF with accident.time as whole hour, longitude, latitude, collision type only for rush-hour times:
+morning.hours = c(4, 5, 6, 7)
+accident.hours = accident.times[is.element(accident.times$hour ,morning.hours),]
+
+# create a color vector:
+colors = c("blue","purple", "springgreen", "orangered")
+names(colors) = c(4, 5, 6, 7)
+
+plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.3, -76.92), ylim = c(38.94, 39.2), pch = ".", col=colors[as.character(accident.hours$hour)], main="Montgomery County Accident Locations: Early Morning Hours", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = morning.hours,col=colors[as.character(morning.hours)],pch=19, cex=0.7)
+
+#close-up:
+plot(accident.hours$Longitude, accident.hours$Latitude, xlim = c(-77.0, -77.05), ylim = c(38.975, 39.025), pch = 20, col=colors[as.character(accident.hours$hour)], main="Downtown Silver Spring Accident Locations: Early Morning Hours", ylab = "Latitude", xlab = "Longitude")
+legend('topright',legend = morning.hours,col=colors[as.character(morning.hours)],pch=19, cex=0.7)
+```
+
+
+
+
+
+
+
 ```{r}
->>>>>>> 76f61e26838e777d3991524dedd4943d0090e1d4
 accident.times = data.frame(Longitude=dat$Longitude, Latitude=dat$Latitude, hour=strptime(as.character(dat$Crash.Date.Time), "%m/%d/%Y %I:%M:%S %p", tz = "America/New_York")$hour + 1, dat$Collision.Type)
 #1: ratio of colision types per hour
 #table showing num accidents depend on hour/collision type
