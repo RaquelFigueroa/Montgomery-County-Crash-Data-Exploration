@@ -264,7 +264,10 @@ for(i in 1:len){
 legend('topleft', title="Weather Conditions",legend = names, col=vec, pch=19, cex=0.6, pt.cex = 1, y.intersp = 1.5)
 ```
 
+
+
 We are creating a visual map of where the accidents happened and what was the ACRS Report type. We imagined that fatal crashes involved at least someone was hospitalized, so we wanted to know where happened and we marked them with an X. We found out that the majority of the fatal crashed also happened in the county, however there were still a lot in the outskirts of the county. 
+
 ```{r}
 par(mar=c(8,3,2,3))
 plot(Latitude ~ Longitude, data=dat, ylim = c(38.95, 39.33), xlim = c(-77.5,-76.9), pch=".", col="grey")
@@ -302,6 +305,41 @@ for(i in 1:length(table(dat$ACRS.Report.Type))){
 }
 ```
 
+###Information About the Agencies Completing Reports
+
+```{r, echo=TRUE}
+# Determine threshold for which columns to keep/discard: 
+percent.filled = apply(dat, 2, function(x) (mean(na.omit(x) != "")) * 100)
+
+# Create DF with only columns at least 90% filled:
+agency.reports.df = dat[, percent.filled >= 90 ]
+
+# add new column to DF of percentage filled fields per row:
+new.row = apply(agency.reports.df, 1, function(x) (mean(na.omit(x) != "")) * 100)
+agency.reports.df$Percent.Filled = new.row
+
+# Determine average percentage filled fields per agency
+filled.by.agency = aggregate(Percent.Filled ~ Agency.Name, data = agency.reports.df, mean)
+
+# Scale the percentages and add values as a new column
+scaled.row = scale(filled.by.agency$Percent.Filled)
+x = scaled.row[,1]
+filled.by.agency$Scaled.Values = x
+
+# Barplot normalized values:
+par(mar=c(5.1,15,4.1,1))
+barplot(filled.by.agency$Scaled.Values, main = "Z-Score normalization of Percentage Complete Reports per Agency",
+          names.arg = filled.by.agency$Agency.Name, horiz = TRUE, las=1, cex.names = 1, 
+          col = c("skyblue4", "darkslategray2"), panel.first = grid(nx = NA, ny = NULL)) 
+```
+
+The Montgomery County Crash Data relies on the local law enforcement agencies to provide data that is accurate and as complete as possible. It is understandable that agents are unlikely to complete 100% of reports during the stressful occurences of dealing with many collisions. Still, it should be noted which agencies are more likely to fill out more information on reports and which agencies create reports that are missing important information. 
+
+Only the report fields with at least 90% of filled-in data was used. Also, only empty cells were considered to be un-filled entries. Any other entry, including "N/A", were considered to be an entry completed by an agent of the corresponding agency.
+
+The resulting barplot shows that the Rockville agency has the record of completing the most fields of a report, while Gaithersburg has the worst record. This may indicate that agents of Gaithersburg do not feel the need to fill out reports to the extent of other agencies. For more accurate data, it would be important for all agencies to complete reports to the best of their abilities for more accurate assessments. This information may be helpful for future data analysis as well. A data scientist may choose to work solely with reports compiled by one agency over another for a more fair analysis and data interpretation.
+
+It should be noted that it is unclear if the agencies with similar names are in fact the same agencies (e.g. "Rockville" and "Rockville Police Departme").
 ## Conclusions
 
 => One paragraph about what you learned, issues you faced, etc. <=
