@@ -5,9 +5,10 @@ date: "3/27/2018"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-dat = read.csv("/Users/raquel/Desktop/Spring 2018/dataScience/project/Crash_Reporting_-_Drivers_Data.csv")
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(prompt=TRUE, comment="", echo=TRUE)
+dat = read.csv("/Users/regie/Documents/code/cst383/Crash_Reporting_-_Drivers_Data.csv")
 ```
 
 ## Project Introduction
@@ -18,7 +19,7 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
+```{r}
 summary(cars)
 ```
 
@@ -38,7 +39,7 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 ## Initial data exploration
 
 Determining rush hour times for more appropriate data analysis:
-```{r rushHour, echo=FALSE}
+```{r}
 # Determine rush hour times
 # only use rows without missing data:
 complete.dat = dat[complete.cases(dat),]
@@ -67,7 +68,7 @@ It can be observed that the rush hour times are from 8:00 am - 10:00 am and from
 
 => Add stuff here <=
 
-```{r test, echo=FALSE}
+```{r}
 accident.times = data.frame(Longitude=dat$Longitude, Latitude=dat$Latitude, hour=strptime(as.character(dat$Crash.Date.Time), "%m/%d/%Y %I:%M:%S %p", tz = "America/New_York")$hour + 1, dat$Collision.Type)
 #1: ratio of colision types per hour
 #table showing num accidents depend on hour/collision type
@@ -79,6 +80,45 @@ cols = c("ANGLE MEETS LEFT HEAD ON","ANGLE MEETS LEFT TURN", "ANGLE MEETS RIGHT 
           "SAME DIRECTION SIDESWIPE","SINGLE VEHICLE","STRAIGHT MOVEMENT ANGLE")
 plot(hr.table[,cols], las=1, col=rainbow(16), main = "Ratios of Collisions per Hour of the Day")
 legend('topleft',legend = cols,col=rainbow(16),pch=19, cex=0.6, pt.cex = 1, y.intersp = 1.5)
+```
+
+```{r}
+# what weather conditions were present during these time --> can include the Surface.Condition (see correlation)
+# color the different locations (latitude & longitude) for every wesather type
+# use lat and lon and weather
+# this looks at the accidents that happened using long and lat
+plot(Latitude ~ Longitude, data=dat, ylim = c(38.95, 39.33), xlim = c(-77.5,-76.9), pch=".", col="grey")
+len = length(sort(table(dat$Weather), decreasing = TRUE))
+vec = rainbow(len)
+names = names(sort(table(dat$Weather), decreasing = TRUE))
+for(i in 1:len){
+  points(Latitude ~ Longitude, data=dat[dat$Weather==names[i],], col=vec[i], pch=".")
+}
+legend('topleft', title="Weather Conditions",legend = names, col=vec, pch=19, cex=0.6, pt.cex = 1, y.intersp = 1.5)
+```
+
+
+```{r}
+# we are creating a visual map of where the accidents happened and what was the ACRS Report type
+plot(Latitude ~ Longitude, data=dat, ylim = c(38.95, 39.33), xlim = c(-77.5,-76.9), pch=".", col="grey")
+len = length(sort(table(dat$ACRS.Report.Type), decreasing = TRUE))
+color = rainbow(len)
+names = names(sort(table(dat$ACRS.Report.Type), decreasing = TRUE))
+for(i in 1:len){
+    points(Latitude ~ Longitude, data=dat[dat$ACRS.Report.Type==names[i],], col=color[i], pch=".") 
+}
+points(Latitude ~ Longitude, data=dat[dat$ACRS.Report.Type=="Fatal Crash",], col=color[i], pch="x") 
+legend('topleft', title="Report Type",legend = names, col=color, pch=19, cex=0.6, pt.cex = 1, y.intersp = 1.5)
+```
+
+```{r}
+# we are looking at weather the accidents are couased by more local residents living in Maryland, or different USA places or other countries
+name = names(table(dat$Drivers.License.State))
+maryland = "MD"
+others = c("AB", "AS", "BC", "IT", "MB", "MH", "NL", "NS", "NT", "ON", "PR", "QC", "SK", "UM", "US", "VI", "XX", "YT")
+states = as.vector(setdiff(setdiff(setdiff(name, others),maryland),""))
+barplot(c(sum(dat$Drivers.License.State %in% maryland), sum(dat$Drivers.License.State %in% states), 
+          sum(dat$Drivers.License.State %in% others)), names.arg =c("Local", "USA", "Others") )
 ```
 
 ## Conclusions
