@@ -258,6 +258,8 @@ plot(Latitude ~ Longitude, data=dat, ylim = c(38.95, 39.33), xlim = c(-77.5,-76.
 len = length(sort(table(dat$Weather), decreasing = TRUE))
 vec = rainbow(len)
 names = names(sort(table(dat$Weather), decreasing = TRUE))
+remove = c("N/A", "OTHER", "UNKNOWN")
+names = setdiff(names, remove)
 for(i in 1:len){
   points(Latitude ~ Longitude, data=dat[dat$Weather==names[i],], col=vec[i], pch=".")
 }
