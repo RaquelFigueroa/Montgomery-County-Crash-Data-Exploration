@@ -255,11 +255,8 @@ A particularly interesting hour is the 7:00 am hour. The number of accidents occ
 
 ###Weather Conditions and Collisions
 
-For every collision accident what occurred in the county, the graph pinpoints what weather condition was present when it happened. The figure shows that most of the accidents happened within the county and not in the outskirt of the county. The graph does not show any N/A, OTHER, UNKNOWN because these three are unknown. The graph below shows that the majority of the collisions accidents happen downtown or in the town and not on the outskirts of the county. 
-
-
 ```{r}
-par(mar=c(8,3,2,3))
+par(mar=c(2,3,1,3))
 plot(Latitude ~ Longitude, data=dat, ylim = c(38.95, 39.33), xlim = c(-77.5,-76.9), pch=".", col="grey")
 len = length(sort(table(dat$Weather), decreasing = TRUE))
 vec = rainbow(len)
@@ -272,13 +269,13 @@ for(i in 1:len){
 legend('topleft', title="Weather Conditions",legend = names, col=vec, pch=19, cex=0.6, pt.cex = 1, y.intersp = 1.5)
 ```
 
+For every collision accident what occurred in the county, the graph pinpoints what weather condition was present when it happened. The figure above shows a zoomed up map view of the accidents from the latitude range of 38.95 to 39.33 and the longitude range of -77.5 to -76.9. It appears that most of the accidents happened within the county and not in the outskirt of the county. The graph is limited and does not show N/A, OTHER, UNKNOWN because these three cannot be categorized to the other weather conditions. The graph shows that the majority of the collisions happen downtown or in the town and not on the outskirts of the county.
+
 
 ### Locations of Fatal Crashes
 
-We are creating a visual map of where the accidents happened and what was the ACRS Report type. We imagined that fatal crashes involved at least someone was hospitalized, so we wanted to know where happened and we marked them with an X. We found out that the majority of the fatal crashed also happened in the county, however there were still a lot in the outskirts of the county. 
-
 ```{r}
-par(mar=c(8,3,2,3))
+par(mar=c(2,3,1,3))
 plot(Latitude ~ Longitude, data=dat, ylim = c(38.95, 39.33), xlim = c(-77.5,-76.9), pch=".", col="grey")
 len = length(sort(table(dat$ACRS.Report.Type), decreasing = TRUE))
 color = rainbow(len)
@@ -289,6 +286,8 @@ for(i in 1:len){
 points(Latitude ~ Longitude, data=dat[dat$ACRS.Report.Type=="Fatal Crash",], col=color[i], pch="x") 
 legend('topleft', title="Report Type",legend = names, col=color, pch=19, cex=0.6, pt.cex = 1, y.intersp = 1.5)
 ```
+
+We are creating a visual map of where the accidents happened and what was the ACRS Report type. We used the same zoomed up map from the last graph wanted to see where the three different ACRS Report types of fatal crashes, injury crashes, and property damage crashes.  It appears that property damage crashes had the most accidents, then injury crashes and the fatal crashes had the least. Most of the property damage crashes were mostly located not on the main roads, but it might have been neighborhoods. Furthermore, injury crashes mostly happened on the main roads of the county. We imagined that fatal crashes involved at least someone could have been hospitalized, so we wanted to know where happened and we marked them with an X. We found out that the majority of the fatal crashes also happened in the county. However, there was still a lot on the outskirts of the county. 
 
 
 ###How Weather may Effect Severity of Collision and Who is at Fault
@@ -306,13 +305,13 @@ for(i in 1:length(table(dat$ACRS.Report.Type))){
 }
 ```
 
+The graphs above show the different weather conditions that were present at the time for each severity level. Furthermore, we compared the difference between drivers at fault and drivers who were not at fault. When comparing the fatal crashes, it appears that clear and cloudy days had the most accidents for drivers at fault. For the case of drivers not at fault clear and rainy weather had the most accidents when excluding any N/A data. The next comparison is for injury crashes, and it was shocking that two graphs between drivers at fault and drivers not at fault look incredibility similar. The last comparison is about property dame crashes, and it appears the quite identical for both drivers at fault and drivers not at fault. However, it seems that drivers at fault had more accidents than the others. 
+
 
 ###Accidents Caused by Locals or Visitors
 
-We are looking at whether the accidents are caused by more locals living in Maryland, or different USA places or other countries. In the figure below it shows that a significant portion of the accidents are from the locals, not that much from drivers from other states and there are some out of country drivers that were involved in some accidents.  
-
 ```{r}
-par(mar=c(8,3,2,3))
+par(mar=c(2,3,2,3))
 name = names(table(dat$Drivers.License.State))
 maryland = "MD"
 others = c("AB", "AS", "BC", "IT", "MB", "MH", "NL", "NS", "NT", "ON", "PR", "QC", "SK", "UM", "US", "VI", "XX", "YT")
@@ -321,6 +320,7 @@ barplot(c(sum(dat$Drivers.License.State %in% maryland), sum(dat$Drivers.License.
           sum(dat$Drivers.License.State %in% others)), names.arg =c("Local", "USA", "Others"), col = c("deepskyblue3", "lightblue3") )
 ```
 
+We are looking at whether the accidents are caused by more locals living in Maryland, or different USA places or other countries. In the figure below it shows that a significant portion of the accidents are from the locals, not that much from drivers from other states and there are some out of country drivers that were involved in some accidents. 
 
 ###Information About the Agencies Completing Reports
 
