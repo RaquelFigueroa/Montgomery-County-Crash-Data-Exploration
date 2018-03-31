@@ -14,7 +14,7 @@ dat = read.csv("https://raw.githubusercontent.com/RaquelFigueroa/Montgomery-Coun
 
 ## Project Introduction
 
-=> explain what you will do in a sentence or two <=
+During the project, we will be investigating the times in the day that collision occur using military time, and we will also be exploring any correlations between weather and the serenity of the accident. Furthermore, we will see who causes the most accidents locks or out of town and which agencies had the most filled out reports. 
 
 
 ## Project Data
