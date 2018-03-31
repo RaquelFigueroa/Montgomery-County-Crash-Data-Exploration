@@ -19,7 +19,7 @@ During the project, we will be investigating the times in the day that collision
 
 ## Project Data
 
-=> Explain in a few sentence where the data comes from, what it is about, etc. <=
+The dataset what we will be using is about each collision indecent that happened on county and local roadways within the Montgomery County. The data collected was from the Automated Crash Reporting System by many agencies such as Montgomery County Police, Gaithersburg Police and more. Within the dataset, it gives where the collision happened such as the latitude and longitude, the date and the street type. It always has information about outside factors such as weather, surface condition, lighting, and traffic control. Information about the other drivers was recorded such as driver license state, substance abuse, distracted drivers, drivers at fault, and injury severity. Other factors that were published were about vehicle damage, vehicle movement, the type of vehicle. Some of the information that will be used will include the location, latitude, longitude, the driver's license state, severity, and weather. 
 
 
 ## Initial data exploration
