@@ -1,7 +1,7 @@
 ---
 title: 'Project 1: Montgomery County Crash Data'
-author: "Regie & Raquel"
-date: "3/30/2018"
+author: "Regie Daquiong, Raquel Figueroa"
+date: "4/7/2018"
 output: html_document
 ---
 
@@ -14,13 +14,14 @@ dat = read.csv("https://raw.githubusercontent.com/RaquelFigueroa/Montgomery-Coun
 
 ## Project Introduction
 
-During the project, we will be investigating the times in the day that collision occur using military time, and we will also be exploring any correlations between weather and the severity of the accident. Furthermore, we will see who causes the most accidents locals or out-of-towners and which agencies had the most complete reports. 
+For this project, we are investigating the times in the day when collisions occur using military time, and we will also be exploring any correlations between weather and the severity of the accident. Furthermore, we will see who causes the most accidents locals or out-of-towners and which agencies had the most complete reports. 
 
 
 ## Project Data
 
-The dataset that we will be using describes individual collision incidences that happened on county, state, and local roadways within the greater Montgomery County of Maryland. The data collected is from the Automated Crash Reporting System by many agencies such as Montgomery County Police, Gaithersburg Police and more. Within the dataset, many different details are given regarding individual collisions, including the longitudes and latitudes of where a collision happened, the date and time of a collision, and even the street types. The data set also provides information on outside factors such as weather, surface condition, lighting, and nearby traffic controls. The information about the drivers associated with a collision was also recorded and this data includes the driver license state, if there is evidence of substance abuse, if a driver was distracted, if a driver was at fault, and injury severity. Other factors that were published include vehicle damage, vehicle movement, and the type of vehicle. Some of the information that will be used for this project includes the location, latitude, longitude, the driver's license state, injury severity, and weather. 
+The dataset we are using describes individual collision incidences that happened on county, state, and local roadways within the greater Montgomery County of Maryland. The data collected is from the Automated Crash Reporting System by many agencies such as Montgomery County Police, Gaithersburg Police and more. Within the dataset, many different details are given regarding individual collisions, including the longitudes and latitudes of where a collision happened, the date and time of a collision, and even the street types. The data set also provides information on outside factors such as weather, surface conditions, lighting, and nearby traffic controls. The information about the drivers associated with a collision was also recorded and this data includes the driver license state, if there is evidence of substance abuse, if a driver was distracted, if a driver was at fault, and injury severity. Other factors that were published include vehicle damage, vehicle movement, and the type of vehicle. Some of the information that will be used for this project includes the location, latitude, longitude, the driver's license state, injury severity, and weather. 
 
+Data Source: https://data.montgomerycountymd.gov/Public-Safety/Crash-Reporting-Drivers-Data/mmzv-x632
 
 ## Initial data exploration
 
@@ -32,13 +33,55 @@ After using the summary() function, it was easy to see which columns of report i
 
 By running the str() function on the data, it is learned that much for the data is in factor form. Knowing this will help when creating new data frames for visualizations.
 
-
+It should also be noted that this data includes collisions beginning January 1, 2015 through March 8, 2018.
 
 ## Data cleaning and preprocessing
 
-With the great number of "N/A", "Other", and "Unknown" values, there will definitely need to be some data cleaning. In particular, these values were deleted from graphs which depended on visualizations based on a particular value like with categorical data. For example, these exact values were discarded when mapping the locations of collisions resulting in injuries, property damage, or fatalities. 
+This project relied heavily on categorical data so it was of the utmost importance to determine which categories to include in visualizations and which to exclude. The questionable categories were empty strings, "N/A", "Other", and "Unknown" values so there is definitely the need to do some data cleaning depending on the desired visual output. For example, these exact values were discarded when mapping the locations of collisions resulting in injuries, property damage, or fatalities. 
 
-There are also many cells where empty strings are located. For one particular barplot, we took into account all of the agencies and their respective average percentages of cells filled in for all reports. If a column of data was less than 90% filled, then that column was discarded from the pool of data for further investigation as those columns were likely filled-in only for special cases. For determining percentage of cells per row that were filled in, only empty strings were considered to be "not filled-in." "N/A", "Unknown", and "Other" entries were considered to be thoughtfully entered values as agents took the time to fill those values into the reports instead of leaving a blank.
+####Empty Strings
+```{r, echo=TRUE}
+percent.empty = apply(dat, 2, function(x) (mean(na.omit(x) == "")))
+percent.empty.asc = percent.empty[order(percent.empty, decreasing = TRUE)]
+par(mar = c(4,13,2,1))
+barplot(percent.empty.asc, horiz = TRUE, las = 2, col = "firebrick", main = "Percent Empty Strings per Column",
+        xlab = "Percent Empty Rows", xlim = c(0, 1), cex.names = 0.75, panel.first = grid(nx = NA, ny = NULL))
+```
+        
+
+There are a few data columns that have a much higher percentage of empty string input. This information is important for the barplot created to further investigate the agencies that input collision records with missing data. We wanted to avoid considering columns that are rarely needed for collision reporting. If a column of data was more than 90% empty then that column was discarded from the pool of data for further investigation as those columns were likely filled-in only for special cases, as is the case with columns "Related.Non.Motorist", "Non.Motorist.Substance.Abuse", and "Off.Road.Description". For determining percentage of cells per row that were filled in, only empty strings were considered to be "not filled-in." "N/A", "Unknown", and "Other" entries were considered to be thoughtfully entered values as agents took the time to fill those values into the reports instead of leaving a blank.
+
+####"N/A" Strings
+```{r, echo=TRUE}
+percent.na = apply(dat,2,function(x) round(mean(na.omit(x) == "N/A"),2))
+percent.na.asc = percent.na[order(percent.na, decreasing = TRUE)]
+par(mar = c(4,13,2,1))
+barplot(percent.na.asc, horiz = TRUE, las = 2, col = "firebrick", main = "Percent N/A Strings per Column",
+        xlab = "Percent Rows per Column", xlim = c(0, 1), cex.names = 0.75, panel.first = grid(nx = NA, ny = NULL))
+```
+
+
+####"OTHER" Strings
+```{r, echo=TRUE}
+percent.other = apply(dat,2,function(x) round(mean(na.omit(x) == "OTHER"),2))
+percent.other.asc = percent.other[order(percent.other, decreasing = TRUE)]
+par(mar = c(4,13,2,1))
+barplot(percent.other.asc, horiz = TRUE, las = 2, col = "firebrick", main = "Percent OTHER Strings per Column",
+        xlab = "Percent Rows per Column", xlim = c(0, 1), cex.names = 0.75, panel.first = grid(nx = NA, ny = NULL))
+```
+
+####"UNKNOWN" Strings
+```{r, echo=TRUE}
+percent.unknown = apply(dat,2,function(x) round(mean(na.omit(x) == "UNKNOWN"),2))
+percent.unknown.asc = percent.unknown[order(percent.unknown, decreasing = TRUE)]
+par(mar = c(4,13,2,1))
+barplot(percent.unknown.asc, horiz = TRUE, las = 2, col = "firebrick", main = "Percent UNKNOWN Strings per Column",
+        xlab = "Percent Rows per Column", xlim = c(0, 1), cex.names = 0.75, panel.first = grid(nx = NA, ny = NULL))
+```
+
+There was the need to decide when to keep "OTHER", "N/A", and "UNKOWN" values for visualizations and when these values should be removed. In most cases, these values were discarded completely. This is the case with the visualizations for collision locations, investigating correlations between collision locations, and visualizing the types of accidents occuring for each hour of the day.
+
+For some graphs, "OTHER", "N/A", and "UNKOWN" values were important as they could indicate information regarding why a more specific value was not reported. This can be seen in the graph demonstrating how the weather may effect the severity of a collision and if the driver was at fault. In this case, "OTHER", "N/A", and "UNKOWN" values were important as their use in the report could signify that the weather was not "out of the ordinary."  
 
 Ultimately, it was necessary to remain vigilante in determining when to discard certain values with the hopes of creating more fair and informative visualizations of the crash data.
 
